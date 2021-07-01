@@ -25,14 +25,17 @@ public class UserDetailsImpl implements UserDetails {
 	private String password;
 
 	private Collection<? extends GrantedAuthority> authorities;
+	
+	private Collection<? extends GrantedAuthority> permissions;
 
 	public UserDetailsImpl(Long id, String username, String email, String password,
-			Collection<? extends GrantedAuthority> authorities) {
+			Collection<? extends GrantedAuthority> authorities, Collection<? extends GrantedAuthority> permissions) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.authorities = authorities;
+		this.permissions = permissions;
 	}
 
 	public static UserDetailsImpl build(User user) {
@@ -40,17 +43,26 @@ public class UserDetailsImpl implements UserDetails {
 				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
 				.collect(Collectors.toList());
 
+		List<GrantedAuthority> permissions = user.getPermissions().stream()
+				.map(permission -> new SimpleGrantedAuthority(permission.getName().name()))
+				.collect(Collectors.toList());
+		
 		return new UserDetailsImpl(
 				user.getId(), 
 				user.getUsername(), 
 				user.getEmail(),
 				user.getPassword(), 
-				authorities);
+				authorities,
+				permissions);
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
+	}
+	
+	public Collection<? extends GrantedAuthority> getPermissions() {
+		return permissions;
 	}
 
 	public Long getId() {

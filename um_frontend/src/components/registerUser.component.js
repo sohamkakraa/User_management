@@ -46,7 +46,7 @@ const vpassword = value => {
   }
 };
 
-export default class Register extends Component {
+export default class RegisterUser extends Component {
   constructor(props) {
     super(props);
     this.handleRegister = this.handleRegister.bind(this);
@@ -59,7 +59,6 @@ export default class Register extends Component {
       email: "",
       password: "",
       successful: false,
-      role: 2,
       message: ""
     };
   }
@@ -87,13 +86,13 @@ export default class Register extends Component {
 
     this.setState({
       message: "",
-      successful: false,
+      successful: false
     });
 
     this.form.validateAll();
 
     if (this.checkBtn.context._errors.length === 0) {
-      AuthService.register(
+      AuthService.registerUser(
         this.state.username,
         this.state.email,
         this.state.password
@@ -101,8 +100,7 @@ export default class Register extends Component {
         response => {
           this.setState({
             message: response.data.message,
-            successful: true,
-            role: 2
+            successful: true
           });
         },
         error => {
@@ -125,7 +123,6 @@ export default class Register extends Component {
   render() {
     return (
       <div className="col-md-12">
-        <h2>For becoming Admin</h2>
         <div className="card card-container">
           <img
             src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
@@ -178,8 +175,24 @@ export default class Register extends Component {
                 </div>
 
                 <div className="form-group">
+                  <label>Permissions</label>
+                      <div className = 'form-control form-control-check'>
+                        <label>Master's Management</label>
+                        <input type = 'checkbox' />
+                      </div>
+                      <div className = 'form-control form-control-check'>
+                        <label>Transactions</label>
+                        <input type = 'checkbox' />
+                      </div>
+                      <div className = 'form-control form-control-check'>
+                        <label>Reports</label>
+                        <input type = 'checkbox' />
+                      </div>
+                </div>
+
+                <div className="form-group">
                   <br />
-                  <button className="btn btn-primary btn-block">Sign up</button>
+                  <button className="btn btn-primary btn-block">Add User</button>
                 </div>
               </div>
             )}

@@ -28,9 +28,11 @@ import com.sohamkakra.usermanagement.payload.request.SignupRequest;
 import com.sohamkakra.usermanagement.payload.response.JwtResponse;
 import com.sohamkakra.usermanagement.payload.response.MessageResponse;
 import com.sohamkakra.usermanagement.repository.RoleRepository;
+import com.sohamkakra.usermanagement.repository.PermissionRepository;
 import com.sohamkakra.usermanagement.repository.UserRepository;
 import com.sohamkakra.usermanagement.security.jwt.JwtUtils;
 import com.sohamkakra.usermanagement.security.services.UserDetailsImpl;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -44,6 +46,9 @@ public class AuthController {
 
 	@Autowired
 	RoleRepository roleRepository;
+	
+	@Autowired
+	PermissionRepository permissionRepository;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -64,12 +69,17 @@ public class AuthController {
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
+		
+		List<String> permissions = userDetails.getAuthorities().stream()
+				.map(item -> item.getAuthority())
+				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(new JwtResponse(jwt, 
 												 userDetails.getId(), 
 												 userDetails.getUsername(), 
 												 userDetails.getEmail(), 
-												 roles));
+												 roles, 
+												 permissions));
 	}
 
 	@PostMapping("/signup")
@@ -93,7 +103,7 @@ public class AuthController {
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
-
+		
 		if (strRoles == null) {
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -105,12 +115,6 @@ public class AuthController {
 					Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(adminRole);
-
-					break;
-				case "mod":
-					Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(modRole);
 
 					break;
 				default:

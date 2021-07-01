@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import AuthService from "../services/auth.service";
-
+import { Switch, Route, Link } from "react-router-dom";
+//import AuthService from "../services/auth.service";
+import RegisterUser from "./registerUser.component";
 import UsersService from "../services/users.service";
 
 export default class BoardAdmin extends Component {
@@ -11,7 +12,6 @@ export default class BoardAdmin extends Component {
         this.state = {
                 users: []
         }
-        // this.addUser = this.addUser.bind(this);
         // this.editUser = this.editUser.bind(this);
         // this.deleteUser = this.deleteUser.bind(this);
     }
@@ -34,17 +34,16 @@ export default class BoardAdmin extends Component {
         });
     }
 
-    // addUser(){
-    //     this.props.history.push('/add-user/_add');
-    // }
-
     render() {
         return (
             <div>
                  <h2 className="text-center">Users List</h2>
                  <div className = "row">
-                    <button className="btn btn-primary" onClick={this.addUser}> Add User</button>
+                    <Link to={"/registerUser"}><button className="btn btn-primary">Add Users</button></Link>
                  </div>
+                 <Switch>
+                    <Route exact path="/registerUser" component={RegisterUser} />
+                 </Switch>
                  <br></br>
                  <div className = "row">
                         <table className = "table table-striped table-bordered">

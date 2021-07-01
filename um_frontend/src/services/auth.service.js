@@ -30,8 +30,22 @@ class AuthService {
     });
   }
 
+  registerUser(username, email, password) {
+    return axios.post(API_URL + "signup", {
+      username,
+      email,
+      password
+    });
+  }
+
   getCurrentUser() {
     return JSON.parse(localStorage.getItem('user'));;
+  }
+
+  getAllUsers = async () => {
+    const res = await fetch('http://localhost:8080/api/users/')
+    const data = await res.json()
+    return data
   }
 }
 

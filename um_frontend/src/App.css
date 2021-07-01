@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+body {
+  font-family: 'Poppins', sans-serif;
+}
 label {
   display: block;
   margin-top: 10px;
@@ -29,4 +33,14 @@ label {
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   border-radius: 50%;
+}
+
+.form-control {
+  margin: 20px 0;
+}
+
+.form-control-check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
